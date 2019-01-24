@@ -290,6 +290,100 @@ function wrp( html, wrapper, classes ) {
 	return node;
 }
 
+
+/**
+ * show()
+ * 
+ * Given a dataURI, opens a new browser window
+ * displaying the object in the dataURI by registering
+ * an object url. If noopen flag is set, no window
+ * will be opened and the blob object will be returned
+ * instead.
+ *
+ * Usage:
+ * show( pdfdata ); //displays pdf in tab
+ */
+function show(dataURI, noopen) {
+	var byteString = atob(dataURI.split(',')[1]);
+	var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+	var ab = new ArrayBuffer(byteString.length);
+	var ia = new Uint8Array(ab);
+	for (var i = 0; i < byteString.length; i++) {
+		ia[i] = byteString.charCodeAt(i);
+	}
+	var blob = new Blob([ab], {type: mimeString});
+	if (!noopen) {
+		var url = URL.createObjectURL(blob);
+		window.open(url)
+	}
+	return blob;
+}
+
+/**
+ * fread()
+ *
+ * Reads file object.
+ * Mode 0 = read as text (default)
+ * Mode 1 = read as data url
+ *
+ * Usage:
+ * fread(upload, func, 1);
+ */
+function fread( file, callback, mode ) {
+	var reader = new FileReader();
+	reader.onload = function(event) {
+		callback(event.target.result);
+	}
+	if (mode) {
+		reader.readAsDataURL(file);
+	} else {
+		reader.readAsText(file);
+	}
+}
+
+/**
+ * download()
+ *
+ * Downloads a string as a file in the browser.
+ *
+ * Usage:
+ * download( 'hello', 'test.txt', 'text/plain' );
+ */
+function download(exportObj, fname, type){
+	if (type == undefined) type = 'octet/stream';
+	var blob = new Blob([exportObj], {'type':type});
+	var url = URL.createObjectURL(blob);
+	var anchor = ce('a');
+	prop(anchor,'href',url);
+	prop(anchor,'download', fname);
+	mv(anchor, D.body);
+	anchor.click();
+	rm(anchor);
+}
+
+/**
+ * rq()
+ * 
+ * Send async request to server.
+ *
+ * Usage:
+ * rq( '', alert );
+ */
+function rq( url, callback, data, headers) {
+	var xhr = new XMLHttpRequest();
+	xhr.open((data ? 'POST' : 'GET'), url);
+	if (headers) {
+		for(var i = 0; i < headers.length; i ++ ) {
+			xhr.setRequestHeader(headers[i][0], headers[i][1]);
+		}
+	}
+	xhr.onload = function() {
+		return callback(xhr.responseText, xhr.status, xhr);
+	}
+	xhr.send(data);
+	return xhr;
+}
+
 /**
  * Assign document to global D.
  */

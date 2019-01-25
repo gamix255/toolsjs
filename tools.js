@@ -138,17 +138,17 @@ function bat(f, n, a, b) {
 }
 
 /**
- * x()
+ * xd()
  *
  * Like Batch but assumes D and with
  * very short notation. Optional second
  * parameter to use another delimiter.
  *
  * Usage:
- * x('attr/a/target/_blank')
+ * xd('attr/a/target/_blank')
  *
  */
-function x( z, s ) {
+function xd( z, s ) {
 	var z = z.split(s || '/');
 	return bat( z[0], qsa(D, z[1]), z[2], z[3]);
 }

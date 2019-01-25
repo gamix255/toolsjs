@@ -22,71 +22,55 @@ Shortcut function to perform query selection.
 
 Usage:
 
-```javascript
 qsa('.myelement');
-```
 
 This function is just a wrapper for:
 document.querySelectorAll()
 
 # html()
 
-Takes a node and query and returns
-or sets the innerHTML of the specified target.
+Sets or returns the innerHTML of a node.
 
 Usage:
-
-```javascript
-html( D, 'h1', 'Title' );
-title = html( D, 'h1' );
-```
+html( qs(D, 'h1'), 'Hello' );
 
 # txt()
-
 Same as html() but for innerText.
 
 # bat()
-
 Applies html(),txt() or attr() or something custom
 to a batch of nodes.
 
 Usage:
 
-```javascript
-bat(D,'a','attr','target', '_blank');
-```
+bat('attr', qsa(D, 'a'), 'target', '_blank')
+
 
 #attr()
-
 Same as html() but for get/setAttribute.
 
 Usage:
 
-```javascript
-attr( D, 'a#link', 'target', '_blank' );
-t = attr( D, 'a#link', 'target' );
-```
+attr( a 'target', '_blank' );
+t = attr( a, 'target' );
 
 Gets/sets attribute of a node.
 
-# prop()
+# dat()
+
+Get/Set data attribute.
 
 Usage:
 
-```javascript
-prop( node, key, value );
-value = prop( node, key );
-```
+dat( node, key, value );
+value = dat( node, key );
 
 # classmod()
 
 Modifies classes of a node.
 
 Usage:
-
-```javascript
 classmod(node, add, remove)
-```
 
 
 # cp()
@@ -103,11 +87,8 @@ node.cloneNode(true).
 Modifies the DOM by appending or inserting a node.
 
 Usage:
-
-```javascript
 mv( node, other, position )
 mv( p, body ) -- append p to body
-```
 
 Where position can be:
 0 = append as child to other
@@ -146,14 +127,19 @@ be returned.
 
 Wraps html in wrapper and adds classes.
 
+# x()
 
-wrp( html, wrapper, classes );
+Like Batch but assumes D and with
+very short notation. Optional second
+parameter to use another delimiter.
 
 Usage:
+x('attr/a/target/_blank');
 
-```javascript
-wrp( 'hello', 'div', ['highlight'] );
-```
+# xf()
+
+Like x() but assumes fdoc(0).
+i.e. operates in first frame.
 
 # show()
 
@@ -164,40 +150,28 @@ will be opened and the blob object will be returned
 instead.
 
 Usage:
-
-```javascript
 show( pdfdata ); //displays pdf in tab
-```
 
 # fread()
 
 Reads file object.
+
 Mode 0 = read as text (default)
 Mode 1 = read as data url
 
 Usage:
-
-```javascript
 fread(upload, func, 1);
-```
-
 
 # download()
 
 Downloads a string as a file in the browser.
 
 Usage:
-
-```javascript
 download( 'hello', 'test.txt', 'text/plain' );
-```
 
 # rq()
- 
+
 Send async request to server.
 
 Usage:
-
-```javascript
 rq( '', alert );
-```

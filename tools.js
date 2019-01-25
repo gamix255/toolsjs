@@ -4,7 +4,7 @@ Tools.JS
 
 JavaScript framework for rich web applications
 without a rich code base.
- 
+
 Licensed BSD
 
 Copyright (c) 2019, Gabor de Mooij for GaborSoftware
@@ -43,9 +43,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * Shortcut function to perform query selection.
  *
  * Usage:
- * 
+ *
  * qs('.myelement');
- * 
+ *
  * This function is just a wrapper for:
  * document.querySelector()
  */
@@ -61,9 +61,9 @@ var qs = function(n,q) {
  * Shortcut function to perform query selection.
  *
  * Usage:
- * 
+ *
  * qsa('.myelement');
- * 
+ *
  * This function is just a wrapper for:
  * document.querySelectorAll()
  */
@@ -75,89 +75,98 @@ var qsa = function(n,q) {
 /**
  * html()
  *
- * Takes a node and query and returns
- * or sets the innerHTML of the specified target.
+ * HTML Getter/Setter
+ *
+ * Sets or returns the innerHTML of a node.
  *
  * Usage:
- * html( D, 'h1', 'Title' );
- * title = html( D, 'h1' );
+ * html( qs(D, 'h1'), 'Hello' );
+ * title = html( qs(D, 'h1')  );
  */
-function html(n, q, str) {
-	if ( str !== undefined ) {
-		qs(n,q).innerHTML = str;
-	} else {
-		return qs(n,q).innerHTML;
-	}
+function html(n, str) {
+	return ( str !== undefined ) ? n.innerHTML = str : n.innerHTML;
 }
 
 /**
- * Same as html() but for innerText.
+ * txt()
+ *
+ * Text Getter/Setter
+ *
+ * Like html() but for innerText.
  */
-function txt(n, q, str) {
-	if ( str !== undefined ) {
-		qs(n,q).innerText = str;
-	} else {
-		return qs(n,q).innerText;
-	}
-}
-/**
- * Applies html(),txt() or attr() or something custom
- * to a batch of nodes.
- * 
- * Usage:
- * 
- * bat(D,'a','attr','target', '_blank');
- * 
- */
-function bat( n, q, f, a, b ) {
-	if ( f == 'html' ) f = 'innerHTML';
-	if ( f == 'txt' ) f = 'innerText';
-	if ( f == 'attr' && b !== undefined ) f = 'setAttribute';
-	if ( f == 'attr' && b === undefined ) f = 'getAttribute';
-	var r = [];
-	var x = qsa( n, q );
-	for(var i = 0; i < x.length; i++) {
-		if ( typeof ( x[i][f] ) === 'function' ) {
-			r.push(x[i][f](a,b));
-		} else {
-			r.push(x[i][f] = (a));
-		}
-	}
-	return r;
+function txt(n, str) {
+	return ( str !== undefined ) ? n.innerText = str : n.innerText;
 }
 
 /**
- * Same as html() but for get/setAttribute.
+ * attr()
+ *
+ * Attribute Getter/Setter
+ *
+ * Sets/gets attribute of node.
+ */
+function attr(n, k, v) {
+	return ( v !== undefined ) ? n.setAttribute(k, v) : n.getAttribute(k);
+}
+
+/**
+ * dat()
+ *
+ * Data attribute Getter/Setter
+ *
+ * Sets/gets data attribute.
+ */
+function dat(n, k, v) {
+	return attr( n, ('data-'+k), v);
+}
+
+/**
+ * bat()
+ *
+ * Batch operation
+ *
+ * Applies function f to all nodes
+ * n, passing arguments a and b.
  *
  * Usage:
  *
- * attr( D, 'a#link', 'target', '_blank' );
- * t = attr( D, 'a#link', 'target' );
+ * bat('attr', qsa(D, 'a'), 'target', '_blank')
+ *
  */
-function attr(n, q, k, v) {
-	if ( v !== undefined) {
-		qs(n,q).setAttribute(k,v);
-	} else {
-		return qs(n,q).getAttribute(k);
-	}
+function bat(f, n, a, b) {
+	return each(n, function(x){ return window[f](x, a, b); });
 }
 
 /**
- * Gets/sets attribute of a node.
- * 
- * Usage
- * prop( node, key, value );
- * value = prop( node, key );
+ * x()
+ *
+ * Like Batch but assumes D and with
+ * very short notation. Optional second
+ * parameter to use another delimiter.
+ *
+ * Usage:
+ * x('attr/a/target/_blank')
+ *
  */
-function prop(n, k, v) {
-	if ( v !== undefined ) {
-		n.setAttribute(k,v);
-	} else {
-		return n.getAttribute(k);
-	}
+function x( z, s ) {
+	var z = z.split(s || '/');
+	return bat( z[0], qsa(D, z[1]), z[2], z[3]);
 }
 
 /**
+ * xf()
+ *
+ * Like x() but assumes fdoc(0).
+ * i.e. operates in first frame.
+ */
+function xf( z, s ) {
+	var z = z.split(s || '/');
+	return bat( z[0], qsa(fdoc(0), z[1]), z[2], z[3]);
+}
+
+/**
+ * classmod()
+ *
  * Modifies classes of a node.
  *
  * Usage:
@@ -171,9 +180,9 @@ function classmod( n, add, remove ) {
 
 /**
  * cp()
- * 
+ *
  * Copy function. Clones a node.
- */ 
+ */
 var cp = function(n) {
 	return n.cloneNode();
 }
@@ -183,10 +192,10 @@ var cp = function(n) {
  *
  * Copy recursively. Clones a node using:
  * node.cloneNode(true).
- */ 
+ */
 var cpr = function(n) {
 	return n.cloneNode(true);
-} 
+}
 
 /**
  * mv()
@@ -201,16 +210,14 @@ var cpr = function(n) {
  * 0 = append as child to other
  * 1 = insert before other
  * 2 = append child to parent of other
- */ 
+ */
 var mv = function(c, n, p) {
 	if (p === 0 || p === undefined) {
 		n.appendChild( c );
 	}
-	
 	if (p === 1) {
 		n.insertNodeBefore( c, n );
 	}
-	
 	if (p === 2) {
 		n.parentNode.appendChild( c );
 	}
@@ -222,6 +229,9 @@ var mv = function(c, n, p) {
  *
  * Frame document.
  * Returns document of specified frame number.
+ *
+ * Usage:
+ * framedoc = fdoc(0);
  */
 var fdoc = function(i) {
 	return frames[i].document;
@@ -248,7 +258,7 @@ function ce( type ) {
 
 /**
  * rm()
- * 
+ *
  * Removes the specified node.
  */
 function rm( n ) {
@@ -259,6 +269,10 @@ function rm( n ) {
  * ls()
  *
  * Lists child nodes of the specified node.
+ *
+ * Usage:
+ *
+ * lis = ls(qs(D,'ul'));
  */
 function ls(n) {
 	return n.childNodes;
@@ -270,6 +284,12 @@ function ls(n) {
  * Each. Applies function f to all nodes in list l
  * and appends the result to array r which will
  * be returned.
+ *
+ * Usage:
+ *
+ * each(qsa(D,'a'), function(a){
+ * 	attr(a, 'target', '_blank');
+ * });
  */
 function each(l,f) {
 	var r = [];
@@ -283,8 +303,15 @@ function each(l,f) {
  * wrp()
  *
  * Wraps html in wrapper and adds classes.
+ *
+ * Usage:
+ *
+ * mv(qs(D,'body'),
+ * 	wrp('<a href="#">top</a>', ['top'])
+ * );
  */
-function wrp( html, wrapper, classes ) {
+function wrp( html, classes, wrapper ) {
+	if ( wrapper == undefined ) wrapper = 'div';
 	var node = classmod( ce( wrapper ), classes );
 	node.innerHTML = html;
 	return node;
@@ -293,7 +320,7 @@ function wrp( html, wrapper, classes ) {
 
 /**
  * show()
- * 
+ *
  * Given a dataURI, opens a new browser window
  * displaying the object in the dataURI by registering
  * an object url. If noopen flag is set, no window
@@ -363,7 +390,7 @@ function download(exportObj, fname, type){
 
 /**
  * rq()
- * 
+ *
  * Send async request to server.
  *
  * Usage:

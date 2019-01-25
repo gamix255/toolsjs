@@ -29,12 +29,10 @@ document.querySelectorAll()
 
 # html()
 
-Takes a node and query and returns
-or sets the innerHTML of the specified target.
+Sets or returns the innerHTML of a node.
 
 Usage:
-html( D, 'h1', 'Title' );
-title = html( D, 'h1' );
+html( qs(D, 'h1'), 'Hello' );
 
 # txt()
 Same as html() but for innerText.
@@ -45,7 +43,7 @@ to a batch of nodes.
 
 Usage:
 
-bat(D,'a','attr','target', '_blank');
+bat('attr', qsa(D, 'a'), 'target', '_blank')
 
 
 #attr()
@@ -53,16 +51,19 @@ Same as html() but for get/setAttribute.
 
 Usage:
 
-attr( D, 'a#link', 'target', '_blank' );
-t = attr( D, 'a#link', 'target' );
+attr( a 'target', '_blank' );
+t = attr( a, 'target' );
 
 Gets/sets attribute of a node.
 
-# prop()
+# dat()
+
+Get/Set data attribute.
 
 Usage:
-prop( node, key, value );
-value = prop( node, key );
+
+dat( node, key, value );
+value = dat( node, key );
 
 # classmod()
 
@@ -126,4 +127,51 @@ be returned.
 
 Wraps html in wrapper and adds classes.
 
+# x()
 
+Like Batch but assumes D and with
+very short notation. Optional second
+parameter to use another delimiter.
+
+Usage:
+x('attr/a/target/_blank');
+
+# xf()
+
+Like x() but assumes fdoc(0).
+i.e. operates in first frame.
+
+# show()
+
+Given a dataURI, opens a new browser window
+displaying the object in the dataURI by registering
+an object url. If noopen flag is set, no window
+will be opened and the blob object will be returned
+instead.
+
+Usage:
+show( pdfdata ); //displays pdf in tab
+
+# fread()
+
+Reads file object.
+
+Mode 0 = read as text (default)
+Mode 1 = read as data url
+
+Usage:
+fread(upload, func, 1);
+
+# download()
+
+Downloads a string as a file in the browser.
+
+Usage:
+download( 'hello', 'test.txt', 'text/plain' );
+
+# rq()
+
+Send async request to server.
+
+Usage:
+rq( '', alert );

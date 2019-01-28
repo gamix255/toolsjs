@@ -145,11 +145,11 @@ function bat(f, n, a, b) {
  * parameter to use another delimiter.
  *
  * Usage:
- * xd('attr/a/target/_blank')
+ * xd('attr;a;target;_blank')
  *
  */
 function xd( z, s ) {
-	var z = z.split(s || '/');
+	var z = z.split(s || ';');
 	return bat( z[0], qsa(D, z[1]), z[2], z[3]);
 }
 

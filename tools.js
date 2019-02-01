@@ -160,7 +160,7 @@ function xd( z, s ) {
  * i.e. operates in first frame.
  */
 function xf( z, s ) {
-	var z = z.split(s || '/');
+	var z = z.split(s || ';');
 	return bat( z[0], qsa(fdoc(0), z[1]), z[2], z[3]);
 }
 

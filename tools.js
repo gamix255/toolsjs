@@ -138,33 +138,6 @@ function bat(f, n, a, b) {
 }
 
 /**
- * xd()
- *
- * Like Batch but assumes D and with
- * very short notation. Optional second
- * parameter to use another delimiter.
- *
- * Usage:
- * xd('attr;a;target;_blank')
- *
- */
-function xd( z, s ) {
-	var z = z.split(s || ';');
-	return bat( z[0], qsa(D, z[1]), z[2], z[3]);
-}
-
-/**
- * xf()
- *
- * Like x() but assumes fdoc(0).
- * i.e. operates in first frame.
- */
-function xf( z, s ) {
-	var z = z.split(s || ';');
-	return bat( z[0], qsa(fdoc(0), z[1]), z[2], z[3]);
-}
-
-/**
  * classmod()
  *
  * Modifies classes of a node.
